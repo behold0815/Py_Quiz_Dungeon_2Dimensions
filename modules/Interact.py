@@ -1,5 +1,5 @@
 class Interact:
-    def __init__(self) -> None:
+    def __init__(self):
         pass
 
     # ask if player wants to play this game
@@ -14,3 +14,10 @@ class Interact:
                 quit()
             else:
                 break  # yes
+
+    # def playerState():
+    #     pState = {
+    #         "headTo":"where to head menu",
+    #         "showLog":"watching log",
+    #         "solve":"solve quiz"
+    #     }

@@ -1,11 +1,13 @@
 # this is a python practice project "two-dimension quiz dungeon"
 # This app will use "CLASS".
+# 建立走過的路線地圖
 
 from modules.Interact import Interact as INA
 from modules.DungeonSettings import DungeonSettings
 import json
 import os
 from logger import logger
+
 
 # ask if player wants to play this game
 INA().askIfWantToPlay()
@@ -48,8 +50,9 @@ while nowPosition != "E":  # now position is not exit
     xPos, yPos = ds.getPos()
 
     # print(xPos,yPos)
+    AD = allowedDirection = []
     AD.clear()
-    AD = allowedDirection = ['log']
+    AD = ['log']
     AD.append(ds.isIndexValid(xPos-1, yPos, 'n', 'North'))
     AD.append(ds.isIndexValid(xPos+1, yPos, 's', 'South'))
     AD.append(ds.isIndexValid(xPos, yPos+1, 'e', 'East'))
@@ -70,18 +73,17 @@ while nowPosition != "E":  # now position is not exit
     # update now position depends on what key player pressed
     if headTo == "n":
         nowPosition = ds.updateNowPos(xPos-1, yPos)
-        logger.writeLog(f"head to N,{xPos-1, yPos}")
     if headTo == "s":
         nowPosition = ds.updateNowPos(xPos+1, yPos)
-        logger.writeLog(f"head to N,{xPos+1, yPos}")
     if headTo == "e":
         nowPosition = ds.updateNowPos(xPos, yPos+1)
-        logger.writeLog(f"head to E,{xPos, yPos+1}")
     if headTo == "w":
         nowPosition = ds.updateNowPos(xPos, yPos-1)
-        logger.writeLog(f"head to W,{xPos, yPos-1}")
-    if headTo == "l":
-        logger.showLog()
+    if headTo == "log":
+        os.system("cls")
+        print("You are watching log. It's when and where you've been to in dungeon.")
+        logger().showLog()
+        os.system("pause")
 
     # print(f"{xPos},{yPos}")
 

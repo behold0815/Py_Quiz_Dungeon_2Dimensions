@@ -2,11 +2,15 @@ import datetime
 
 
 class dateTimeFormat:
-    def __init__(self): pass
+    def __init__(self):
+        self.getToday = datetime.datetime.today()
 
     def getDateTime(self):
-        loc_dt = datetime.datetime.today()
-        loc_dt_format = loc_dt.strftime("%Y/%m/%d %H:%M:%S")
+        loc_dt_format = self.getToday.strftime("%Y/%m/%d %H:%M:%S")
+        return loc_dt_format
+
+    def getDate(self):
+        loc_dt_format = self.getToday.strftime("%Y/%m/%d")
         return loc_dt_format
 
 # t = dateTimeFormat()

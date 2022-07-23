@@ -5,19 +5,19 @@ import random
 import json
 from logger import logger
 
-
 class DungeonSettings:
+
     def __init__(self):
         startX = 0  # default x-axis index
         startY = 0  # default y-axis index
-        quizPassedRoom = [[]]  # recorder the quiz room the player passed
-        passedRoom = [[]]  # recorder the room the player passed
+        # quizPassedRoom = [[]]  # recorder the quiz room the player passed
+        # passedRoom = [[]]  # recorder the room the player passed
         self.xPos = startX  # now position x-axis index
         self.yPos = startY  # now position y-axis index
         self.xMax, self.yMax = self.buildDungeon().shape  # get dungeon shape
         self.headUp = ""
-        self.QPR = quizPassedRoom
-        self.PRoom = passedRoom
+        # self.QPR = quizPassedRoom
+        # self.PRoom = passedRoom
 
     # get now position x,y index
     def getPos(self):
@@ -67,31 +67,23 @@ class DungeonSettings:
     # check if index is valid
     def isIndexValid(self, xPos, yPos, key, direction):
         d = self.buildDungeon()
-        # check if the array index  out of range
+        # check if the index is not out of range
         isValid = self.posIsValid(xPos, yPos)
         if isValid == True:
-            room = d[xPos][yPos]  # update 4 directions index
+            room = d[xPos][yPos]  # update certain direction index
             if room != "0":  # if the room is not "Wall"
                 self.updateHeadUp(key, direction)
                 return key
         return "null"
 
     # update now position
+    @logger # Log
     def updateNowPos(self, xPos, yPos):
         d = self.buildDungeon()
-        nowPosition = d[xPos][yPos]  # update 4 directions index
+        nowPosition = d[xPos][yPos]  # update certain direction index
         self.xPos = xPos
         self.yPos = yPos
-        return nowPosition
-
-    # update now position
-    # @logger.logPassedRoom
-    # def newUpdateNowPos(self, xPos, yPos):
-    #     d = self.buildDungeon()
-    #     nowPosition = d[xPos][yPos]  # update 4 directions index
-    #     self.xPos = xPos
-    #     self.yPos = yPos
-    #     return nowPosition
+        return nowPosition # if method return anything, you must use return
 
     # update head-up
     def updateHeadUp(self, key, direction):
@@ -116,18 +108,3 @@ class DungeonSettings:
 #     {"Q":"a question you need to solve. "}
 # ]
 
-    # decorator
-    # def isIndexValid(self,cb):
-    #     xMax = self.xMax
-    #     yMax = self.yMax
-    #     def checkIndex(xPo, yPo):
-    #         if xPo < 0 or yPo < 0 or xPo >= xMax or yPo >= yMax:
-    #             return checkIndex
-    #         else:cb(xPo, yPo)
-    #     return checkIndex
-
-    # update index
-    # @isIndexValid
-    # def updateIndex(self,xPo,yPo):
-    #     d = self.buildDungeon()
-    #     return d[xPo][yPo]
