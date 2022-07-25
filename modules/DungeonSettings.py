@@ -1,5 +1,5 @@
 # set dungeon, check position, get position
-
+from modules.dateTimeFormat import dateTimeFormat
 import numpy as npy
 import random
 import json
@@ -8,20 +8,10 @@ from logger import logger
 class DungeonSettings:
 
     def __init__(self):
-        startX = 0  # default x-axis index
-        startY = 0  # default y-axis index
-        # quizPassedRoom = [[]]  # recorder the quiz room the player passed
-        # passedRoom = [[]]  # recorder the room the player passed
-        self.xPos = startX  # now position x-axis index
-        self.yPos = startY  # now position y-axis index
         self.xMax, self.yMax = self.buildDungeon().shape  # get dungeon shape
         self.headUp = ""
-        # self.QPR = quizPassedRoom
-        # self.PRoom = passedRoom
-
-    # get now position x,y index
-    def getPos(self):
-        return self.xPos, self.yPos
+        dT = dateTimeFormat()
+        self.Date = dT.getDate().replace("/", "")  # yyyyMMdd
 
     # create quiz
     def createQuiz(*args):
@@ -78,12 +68,8 @@ class DungeonSettings:
 
     # update now position
     @logger # Log
-    def updateNowPos(self, xPos, yPos):
-        d = self.buildDungeon()
-        nowPosition = d[xPos][yPos]  # update certain direction index
-        self.xPos = xPos
-        self.yPos = yPos
-        return nowPosition # if method return anything, you must use return
+    def updateNowPos(D, xPos, yPos):
+        return D[xPos][yPos],xPos,yPos # if method return anything, you must use return
 
     # update head-up
     def updateHeadUp(self, key, direction):
@@ -91,7 +77,9 @@ class DungeonSettings:
             self.headUp += "\n"
         self.headUp += f"Press '{key}' head to {direction}."
 
-
+    def showLog(self):
+        with open(f"{self.Date}_log.txt","r") as f:
+            print(f.read())
 # # a Directions Heads Up
 # aDirectionsHeadsUp = [
 #     {"Left":"Your left is "},

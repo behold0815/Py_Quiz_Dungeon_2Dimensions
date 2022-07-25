@@ -21,17 +21,18 @@ print("You've entered Quiz Dungeon.")
 # build dungeon
 ds = DungeonSettings()
 d = ds.buildDungeon()
-xPos, yPos = ds.getPos()
-nowPosition = d[xPos][yPos]
+xPos = 0
+yPos = 0
+PositionContent = d[xPos][yPos]
 
 # print(f"You are at [{xPos}][{yPos}] position.\n")
 
-while nowPosition != "E":  # now position is not exit
-    if nowPosition == "1":
+while PositionContent != "E":  # now position is not exit
+    if PositionContent == "1":
         print("It is an empty room.\n")
 
     # encounter the quiz
-    elif nowPosition == "Q":
+    elif PositionContent == "Q":
         quiz = json.loads(ds.createQuiz())
 
         while True:
@@ -47,9 +48,6 @@ while nowPosition != "E":  # now position is not exit
                 continue
 
     # check 4 directions and add head up
-    xPos, yPos = ds.getPos()
-
-    # print(xPos,yPos)
     AD = allowedDirection = []
     AD.clear()
     AD = ['log']
@@ -72,17 +70,17 @@ while nowPosition != "E":  # now position is not exit
 
     # update now position depends on what key player pressed
     if headTo == "n":
-        nowPosition = ds.updateNowPos(xPos-1, yPos)
+        PositionContent,xPos,yPos = ds.updateNowPos(d, xPos-1, yPos)
     if headTo == "s":
-        nowPosition = ds.updateNowPos(xPos+1, yPos)
+        PositionContent,xPos,yPos = ds.updateNowPos(d, xPos+1, yPos)
     if headTo == "e":
-        nowPosition = ds.updateNowPos(xPos, yPos+1)
+        PositionContent,xPos,yPos = ds.updateNowPos(d, xPos, yPos+1)
     if headTo == "w":
-        nowPosition = ds.updateNowPos(xPos, yPos-1)
+        PositionContent,xPos,yPos = ds.updateNowPos(d, xPos, yPos-1)
     if headTo == "log":
         os.system("cls")
         print("You are watching log. It's when and where you've been to in dungeon.")
-        logger().showLog()
+        ds.showLog()
         os.system("pause")
 
     # print(f"{xPos},{yPos}")
