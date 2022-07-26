@@ -12,37 +12,7 @@ class DungeonSettings():
         startY = 0  # default y-axis index
         self.xPos = startX  # now position x-axis index
         self.yPos = startY  # now position y-axis index
-        self.Dung = self.buildDungeon()
-        self.xMax, self.yMax = self.Dung.shape  # get dungeon shape
-        self.headUp = ""
-        self.rMap = [[]]
-
-    # get now position x,y index
-    def getPos(self):
-        return self.xPos, self.yPos
-
-    # create quiz
-    def createQuiz(*args):
-        Quiz = [
-            {"Question": "1+1=", "Answer": 2},
-            {"Question": "5+1=", "Answer": 6},
-            {"Question": "3+1=", "Answer": 4},
-            {"Question": "11+1=", "Answer": 12}
-        ]
-        return json.dumps(random.choice(Quiz))
-
-    # build dungeon
-    def buildDungeon(self):
-        roomSettings = {
-            "0": "wall",
-            "1": "empty",
-            "2": "dead end",
-            "E": "exit",
-            "Q": "quiz",
-        }
-
-        # dungeon layout
-        dungeon = npy.array(
+        self.dungeon = npy.array( # dungeon layout
             [["Q", "1", "1", "0", "0", "2", "0", "0", "0", ],
              ["1", "0", "1", "0", "0", "1", "0", "2", "0", ],
              ["1", "1", "1", "0", "0", "1", "0", "1", "0", ],
@@ -53,8 +23,35 @@ class DungeonSettings():
              ["0", "1", "0", "1", "0", "1", "0", "E", "0", ],
              ["0", "1", "Q", "1", "0", "1", "1", "1", "0"]]
         )
-        # print(dungeon)
-        return dungeon
+        self.Dung = self.buildDungeon()
+        self.xMax, self.yMax = self.Dung.shape  # get dungeon shape
+        self.headUp = ""
+        self.rMap = npy.full((self.xMax,self.yMax), " ").tolist()
+        self.roomSettings = {
+            "0": "wall",
+            "1": "empty",
+            "2": "dead end",
+            "E": "exit",
+            "Q": "quiz",
+        }
+        self.Quiz = [
+            {"Question": "1+1=", "Answer": 2},
+            {"Question": "5+1=", "Answer": 6},
+            {"Question": "3+1=", "Answer": 4},
+            {"Question": "11+1=", "Answer": 12}
+        ]
+
+    # get now position x,y index
+    def getPos(self):
+        return self.xPos, self.yPos
+
+    # create quiz
+    def createQuiz(self):
+        return json.dumps(random.choice(self.Quiz))
+
+    # build dungeon
+    def buildDungeon(self):
+        return self.dungeon
 
     # check if the index in "2D array" is out of range
     def posIsValid(self, xPo, yPo):
@@ -75,10 +72,11 @@ class DungeonSettings():
 
     # update now position
     @logger.writeLog
-    def updateNowPos(self, xPos, yPos):
+    def updateNowPos(self, xPos, yPos, headTo):
         nowPosition = self.Dung[xPos][yPos]  # update 4 directions index
         self.xPos = xPos
         self.yPos = yPos
+        self.recordMap(headTo,xPos,yPos)
         return nowPosition # if method return anything, you must use return
 
     # update head-up
@@ -88,23 +86,35 @@ class DungeonSettings():
         self.headUp += f"Press '{key}' head to {direction}."
 
     # record map the player passed through
-    # def recordMap(self, content, xPos, yPos):
-    #     # ▲▼✱▶◀？☐
-    #     marks = {
-    #         "n":"▲",
-    #         "s":"▼",
-    #         "e":"►",
-    #         "w":"◄",
-    #         "pass again":"✱",
-    #         "quiz room":"？",
-    #         "exit":"☐"
-    #     }
+    def recordMap(self, headTo, xPos, yPos):
+        # ▲▼✱▶◀？☐
+        marks = {
+            "n":"↑",
+            "s":"↓",
+            "e":"→",
+            "w":"←",
+            "pass again":"✱",
+            "Q":"？",
+            "E":"☐"
+        }
 
-    #     if 
+        conT = self.Dung[xPos][yPos]
+        rMapCont = self.rMap[xPos][yPos]
 
-    #     self.rMap[[xPos,yPos]] = marks[content]
+        if conT == "Q" or conT == "E":
+            rMapCont = marks[conT]
+        # elif rMapCont != " ":
+        #     rMapCont = marks["pass again"]
+        else:
+            rMapCont = marks[headTo]
 
+        self.rMap[xPos][yPos] = rMapCont
 
+    def showMap(self):
+        for i in self.rMap:
+            for j in i:
+                print(j,end="")
+            print("")
 
 
 

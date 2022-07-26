@@ -17,7 +17,7 @@ ds = DungeonSettings()
 d = ds.buildDungeon()
 xPos, yPos = ds.getPos()
 PositionContent = d[xPos][yPos]
-rMap = d.copy() # copy dungeon and record the map you passed by
+
 
 # print(f"You are at [{xPos}][{yPos}] position.\n")
 
@@ -44,7 +44,7 @@ while PositionContent != "E":  # now position is not exit
     # check 4 directions and add head up
     AD = allowedDirection = []
     AD.clear()
-    AD = ['log']
+    AD = ['log', 'map']
     AD.append(ds.isIndexValid(xPos-1, yPos, 'n', 'North'))
     AD.append(ds.isIndexValid(xPos+1, yPos, 's', 'South'))
     AD.append(ds.isIndexValid(xPos, yPos+1, 'e', 'East'))
@@ -65,23 +65,24 @@ while PositionContent != "E":  # now position is not exit
 
     # update now position depends on what key player pressed
     if headTo == "n":
-        PositionContent = ds.updateNowPos(xPos-1, yPos)
+        PositionContent = ds.updateNowPos(xPos-1, yPos, headTo)
     if headTo == "s":
-        PositionContent = ds.updateNowPos(xPos+1, yPos)
+        PositionContent = ds.updateNowPos(xPos+1, yPos, headTo)
     if headTo == "e":
-        PositionContent = ds.updateNowPos(xPos, yPos+1)
+        PositionContent = ds.updateNowPos(xPos, yPos+1, headTo)
     if headTo == "w":
-        PositionContent = ds.updateNowPos(xPos, yPos-1)
+        PositionContent = ds.updateNowPos(xPos, yPos-1, headTo)
     if headTo == "log":
         headsUp = "You are watching log. It's when and where you've been to in dungeon."
-        INA.disPlay(headsUp,logger.showLog) # pass ds.showLog by address
+        INA.disPlay(headsUp, logger.showLog)  # pass ds.showLog by address
     if headTo == "map":
         headsUp = "This is the map you've passed through."
-        # INA.disPlay(headsUp,)
+        INA.disPlay(headsUp, ds.showMap)
 
     # check 4 directions and add head up
     xPos, yPos = ds.getPos()
-    # print(f"{xPos},{yPos}")
 
 print("It is an exit. Congratulation, you have passed the Quiz Dungeon.")
+headsUp = "This is the map you've passed through."
+INA.disPlay(headsUp, ds.showMap)
 quit()
