@@ -5,13 +5,21 @@ import random
 import json
 from logger import logger
 
-class DungeonSettings:
+class DungeonSettings():
 
     def __init__(self):
-        self.xMax, self.yMax = self.buildDungeon().shape  # get dungeon shape
+        startX = 0  # default x-axis index
+        startY = 0  # default y-axis index
+        self.xPos = startX  # now position x-axis index
+        self.yPos = startY  # now position y-axis index
+        self.Dung = self.buildDungeon()
+        self.xMax, self.yMax = self.Dung.shape  # get dungeon shape
         self.headUp = ""
-        dT = dateTimeFormat()
-        self.Date = dT.getDate().replace("/", "")  # yyyyMMdd
+        self.rMap = [[]]
+
+    # get now position x,y index
+    def getPos(self):
+        return self.xPos, self.yPos
 
     # create quiz
     def createQuiz(*args):
@@ -56,10 +64,9 @@ class DungeonSettings:
 
     # check if index is valid
     def isIndexValid(self, xPos, yPos, key, direction):
-        d = self.buildDungeon()
+        d = self.Dung
         # check if the index is not out of range
-        isValid = self.posIsValid(xPos, yPos)
-        if isValid == True:
+        if self.posIsValid(xPos, yPos) == True:
             room = d[xPos][yPos]  # update certain direction index
             if room != "0":  # if the room is not "Wall"
                 self.updateHeadUp(key, direction)
@@ -67,9 +74,12 @@ class DungeonSettings:
         return "null"
 
     # update now position
-    @logger # Log
-    def updateNowPos(D, xPos, yPos):
-        return D[xPos][yPos],xPos,yPos # if method return anything, you must use return
+    @logger.writeLog
+    def updateNowPos(self, xPos, yPos):
+        nowPosition = self.Dung[xPos][yPos]  # update 4 directions index
+        self.xPos = xPos
+        self.yPos = yPos
+        return nowPosition # if method return anything, you must use return
 
     # update head-up
     def updateHeadUp(self, key, direction):
@@ -77,9 +87,27 @@ class DungeonSettings:
             self.headUp += "\n"
         self.headUp += f"Press '{key}' head to {direction}."
 
-    def showLog(self):
-        with open(f"{self.Date}_log.txt","r") as f:
-            print(f.read())
+    # record map the player passed through
+    # def recordMap(self, content, xPos, yPos):
+    #     # ▲▼✱▶◀？☐
+    #     marks = {
+    #         "n":"▲",
+    #         "s":"▼",
+    #         "e":"►",
+    #         "w":"◄",
+    #         "pass again":"✱",
+    #         "quiz room":"？",
+    #         "exit":"☐"
+    #     }
+
+    #     if 
+
+    #     self.rMap[[xPos,yPos]] = marks[content]
+
+
+
+
+
 # # a Directions Heads Up
 # aDirectionsHeadsUp = [
 #     {"Left":"Your left is "},
